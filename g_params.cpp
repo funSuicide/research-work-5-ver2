@@ -1,4 +1,4 @@
-#include "/home/funsuicide/repos/research-work/research-work-5/g_params.hpp"
+#include "g_params.hpp"
 int gostParamsParse(const char *key)
 {
     const char *p = key;
