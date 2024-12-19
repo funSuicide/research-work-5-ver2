@@ -70,7 +70,6 @@ static int kuznechik512Update(void *kuznechik512Ctx, unsigned char *out, size_t 
     size_t processed = 0;
     size_t *partialBlockLen = &(ctx->partialBlockLen);
     std::vector<byteVectorKuznechik> result(BLOCK_SIZE_KUZ_AVX512 / sizeof(byteVectorKuznechik));
-    std::cout << "TEST" << std::endl;
     *partialBlockLen += inl;
     for (size_t i = 0; i < inl / BLOCK_SIZE_KUZ_AVX512; ++i)
     {
@@ -82,17 +81,14 @@ static int kuznechik512Update(void *kuznechik512Ctx, unsigned char *out, size_t 
         ctx->partialBlockLen -= sizeBlock;
         ctx->last += sizeBlock;
     }
-    std::cout << "TEST" << std::endl;
     std::copy_n(in + processed, inl % BLOCK_SIZE_KUZ_AVX512, (unsigned char*)&ctx->buffer2[0]);      
     *outl = processed;
-    std::cout << "TEST" << std::endl;
 
     return 1;
 }
 
 static int kuznechik512Final(void *kuznechik512Ctx, unsigned char *out, size_t *outl, size_t outsize)
 {
-    std::cout << "TEST" << std::endl;
     struct kuznechik512CtxSt *ctx = (kuznechik512CtxSt*)kuznechik512Ctx;
     size_t sizeBlock = ctx->sizeBlock;
     size_t partialBlockLen = ctx->partialBlockLen;

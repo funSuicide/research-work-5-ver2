@@ -235,17 +235,22 @@ static inline __m512i getStartGammaBlocksKuznechikAVX512(uint64_t iV)
 	uint64_t diffGamma[8] = {0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00};
 	__m512i diffGammaReg =  _mm512_loadu_si512((const __m256i*)diffGamma);
 	__m512i gammalocks = getStartGammaBlocksKuznechikAVX512(iV);
+	std::cout << "vvv" << std::endl;
 	for (size_t b = 0; b < src.size(); b += 4)
 	{
+		std::cout << "vvv" << std::endl;
 		__m512i blocks = _mm512_loadu_si512((const __m512i*)(src.data() + b));
 
+		std::cout << "vvv" << std::endl;
 		__m512i result = _mm512_setzero_si512();
 
+		std::cout << "vvv" << std::endl;
 		result = encryptBlockAVX512(gammalocks, this->roundKeysKuznechik);
 
 		result = _mm512_xor_si512(result, blocks);
 
 		_mm512_storeu_si512((__m512i*)(dest.data() + b), result);
+		std::cout << "vvv" << std::endl;
 
 		gammalocks = _mm512_add_epi64(gammalocks, diffGammaReg);
 	}
