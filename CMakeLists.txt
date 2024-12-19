@@ -22,6 +22,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/g_params.cpp
                    DEPENDS libprov/perl/gen_param_LL.pl)
 
 set(gost_source customProvider.cpp g_params.cpp ./MagmaAVX2/MagmaAVX2.cpp ./Structures/Structures.cpp ./KuznechikAVX2/KuznechikAVX2.cpp 
+./KuznechikAVX512/KuznechikAVX512.cpp ./MagmaAVX512/MagmaAVX512.cpp ./MagmaAVX512Reg/MagmaAVX512Reg.cpp
 ./KuznechikContextAVX2/KuznechikContextAVX2.cpp ./MagmaContextAVX2/MagmaContextAVX2.cpp ./MagmaContextAVX512/MagmaContextAVX512.cpp
 ./MagmaContextAVX512Reg/MagmaContextAVX512Reg.cpp ./KuznechikContextAVX512/KuznechikContextAVX512.cpp) 
 set(gost_libs libprov)
