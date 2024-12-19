@@ -92,6 +92,7 @@ static int kuznechik512Update(void *kuznechik512Ctx, unsigned char *out, size_t 
 
 static int kuznechik512Final(void *kuznechik512Ctx, unsigned char *out, size_t *outl, size_t outsize)
 {
+    std::cout << "TEST" << std::endl;
     struct kuznechik512CtxSt *ctx = (kuznechik512CtxSt*)kuznechik512Ctx;
     size_t sizeBlock = ctx->sizeBlock;
     size_t partialBlockLen = ctx->partialBlockLen;
