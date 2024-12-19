@@ -93,9 +93,7 @@ static int kuznechik512Final(void *kuznechik512Ctx, unsigned char *out, size_t *
     size_t sizeBlock = ctx->sizeBlock;
     size_t partialBlockLen = ctx->partialBlockLen;
     std::vector<byteVectorKuznechik> result(BLOCK_SIZE_KUZ_AVX512 / sizeof(byteVectorKuznechik));
-    std::cout << "TEST" << std::endl;
     ctx->K.processDataGamma(ctx->buffer2, result, ctx->ivu);
-    std::cout << "TEST" << std::endl;
     //ctx->ivu += 0x04;
     std::copy_n((unsigned char*)&result[0], partialBlockLen, out);
     *outl = partialBlockLen;
