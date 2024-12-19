@@ -1,6 +1,7 @@
 #include "MagmaAVX512Reg.hpp"
 #include <iostream>
 
+
 register __m512i r1 asm ("zmm16");
 register __m512i r2 asm ("zmm17");
 register __m512i r3 asm ("zmm18");
