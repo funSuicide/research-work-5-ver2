@@ -76,7 +76,7 @@ static int magma512Update(void *magma512Ctx, unsigned char *out, size_t *outl, s
     {
         std::copy_n(in + i * BLOCK_SIZE_MAG_AVX512, BLOCK_SIZE_MAG_AVX512, (unsigned char*)&ctx->buffer2[0]);
         ctx->M.processDataGamma(ctx->buffer2, result, ctx->ivu);
-        ctx->ivu += 0x04;
+        ctx->ivu += 0x08;
         std::copy_n((unsigned char*)&result[0], BLOCK_SIZE_MAG_AVX512, out + i * BLOCK_SIZE_MAG_AVX512);
         processed += sizeBlock;
         ctx->partialBlockLen -= sizeBlock;
@@ -96,7 +96,7 @@ static int magma512Final(void *magma512Ctx, unsigned char *out, size_t *outl, si
     size_t partialBlockLen = ctx->partialBlockLen;
     std::vector<byteVectorMagma> result(BLOCK_SIZE_MAG_AVX512 / sizeof(byteVectorMagma));
     ctx->M.processDataGamma(ctx->buffer2, result, ctx->ivu);
-    ctx->ivu += 0x08;
+    //ctx->ivu += 0x08;
     std::copy_n((unsigned char*)&result[0], partialBlockLen, out);
     *outl = partialBlockLen;
 

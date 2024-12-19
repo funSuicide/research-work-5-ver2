@@ -96,7 +96,7 @@ static int magma512RegFinal(void *magma512RegCtx, unsigned char *out, size_t *ou
     size_t partialBlockLen = ctx->partialBlockLen;
     std::vector<byteVectorMagma> result(BLOCK_SIZE_MAG_AVX512Reg / sizeof(byteVectorMagma));
     ctx->M.processDataGamma(ctx->buffer2, result, ctx->ivu);
-    ctx->ivu += 0x04;
+    //ctx->ivu += 0x04;
     std::copy_n((unsigned char*)&result[0], partialBlockLen, out);
     *outl = partialBlockLen;
 

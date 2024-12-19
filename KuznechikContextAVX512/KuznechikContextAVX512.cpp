@@ -70,21 +70,22 @@ static int kuznechik512Update(void *kuznechik512Ctx, unsigned char *out, size_t 
     size_t processed = 0;
     size_t *partialBlockLen = &(ctx->partialBlockLen);
     std::vector<byteVectorKuznechik> result(BLOCK_SIZE_KUZ_AVX512 / sizeof(byteVectorKuznechik));
-   
+    std::cout << "TEST" << std::endl;
     *partialBlockLen += inl;
     for (size_t i = 0; i < inl / BLOCK_SIZE_KUZ_AVX512; ++i)
     {
         std::copy_n(in + i * BLOCK_SIZE_KUZ_AVX512, BLOCK_SIZE_KUZ_AVX512, (unsigned char*)&ctx->buffer2[0]);
         ctx->K.processDataGamma(ctx->buffer2, result, ctx->ivu);
-        ctx->ivu += 0x02;
+        ctx->ivu += 0x04;
         std::copy_n((unsigned char*)&result[0], BLOCK_SIZE_KUZ_AVX512, out + i * BLOCK_SIZE_KUZ_AVX512);
         processed += sizeBlock;
         ctx->partialBlockLen -= sizeBlock;
         ctx->last += sizeBlock;
     }
-
+    std::cout << "TEST" << std::endl;
     std::copy_n(in + processed, inl % BLOCK_SIZE_KUZ_AVX512, (unsigned char*)&ctx->buffer2[0]);      
     *outl = processed;
+    std::cout << "TEST" << std::endl;
 
     return 1;
 }
@@ -96,7 +97,8 @@ static int kuznechik512Final(void *kuznechik512Ctx, unsigned char *out, size_t *
     size_t partialBlockLen = ctx->partialBlockLen;
     std::vector<byteVectorKuznechik> result(BLOCK_SIZE_KUZ_AVX512 / sizeof(byteVectorKuznechik));
     ctx->K.processDataGamma(ctx->buffer2, result, ctx->ivu);
-    ctx->ivu += 0x04;
+    std::cout << "TEST" << std::endl;
+    //ctx->ivu += 0x04;
     std::copy_n((unsigned char*)&result[0], partialBlockLen, out);
     *outl = partialBlockLen;
     
