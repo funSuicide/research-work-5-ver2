@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_compile_definitions(AUTHOR="@funSuicide") 
 
-add_compile_options(-mavx2 -mavx512dq)
+add_compile_options(-mavx2 -march=native -mavx512f -mavx512vl -mavx512bw -mavx512dq)
 add_subdirectory(libprov)
 include(libprov/cmake/provider.cmake)
 
