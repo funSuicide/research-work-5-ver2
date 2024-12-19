@@ -4,6 +4,8 @@
 #include <immintrin.h>
 #include <span>
 #include "../Structures/Structures.hpp"
+#include "../tables/table4X256.hpp"
+#include "../tables/table2X65536.hpp"
 
 class MagmaAVX512Reg {
 private:

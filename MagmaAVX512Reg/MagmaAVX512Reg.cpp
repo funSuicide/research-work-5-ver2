@@ -1,7 +1,5 @@
 #include "MagmaAVX512Reg.hpp"
 #include <iostream>
-#include "table4X256.hpp"
-#include "table2X65536.hpp"
 
 register __m512i r1 asm ("zmm16");
 register __m512i r2 asm ("zmm17");
