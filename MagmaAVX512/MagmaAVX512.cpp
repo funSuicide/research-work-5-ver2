@@ -1,7 +1,6 @@
 #include "MagmaAVX512.hpp"
 #include <iostream>
-#include "table4X256.hpp"
-#include "table2X65536.hpp"
+
 
 static inline __m512i invBytes(__m512i data)
 {
