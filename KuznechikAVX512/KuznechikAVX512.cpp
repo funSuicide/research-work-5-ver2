@@ -183,12 +183,9 @@ static inline __m512i encryptBlockAVX512(__m512i blocks, const byteVectorKuznech
 	byteVectorKuznechik t[4];
 	for (size_t i = 0; i < 9; ++i) {
 		__m256i tmpKeys = _mm256_loadu_si256((const __m256i*)roundKeysKuznechik[i]);
-		std::cout << "1" << std::endl;
 		__m512i keys = _mm512_broadcast_i64x4(tmpKeys);
-		std::cout << "2" << std::endl;
 		result = _mm512_xor_si512(result, keys);
-		_mm512_store_epi32((__m512i*)t, result);
-		std::cout << "3" << std::endl;
+		_mm512_storeu_epi32((__m512i*)t, result);
 		__m512i tmp = _mm512_setzero_si512();
 		for (size_t j = 0; j < 16; j++) {
 
@@ -196,8 +193,6 @@ static inline __m512i encryptBlockAVX512(__m512i blocks, const byteVectorKuznech
 			__m128i tmp2 = _mm_loadu_si128((const __m128i*) & startByteTAVX512[j][t[1].bytes[j]]);
 			__m128i tmp3 = _mm_loadu_si128((const __m128i*) & startByteTAVX512[j][t[2].bytes[j]]);
 			__m128i tmp4 = _mm_loadu_si128((const __m128i*) & startByteTAVX512[j][t[3].bytes[j]]);
-
-			std::cout << "4" << std::endl;
 
 			__m512i valuesAVX = _mm512_inserti64x2(_mm512_inserti64x2(_mm512_inserti64x2(_mm512_castsi128_si512(tmp1), tmp2, 0x01), tmp3, 0x02), tmp4, 0x03);
 			
