@@ -40,7 +40,6 @@ struct OsslCtx{
     int encrypt(unsigned char* data, unsigned char* out, int size){
         int result = 0;
         check(EVP_EncryptUpdate(ctx, out, &result, data, size), "encrypt");
-        std::cout << result << std::endl;
         return result;
     }
 
