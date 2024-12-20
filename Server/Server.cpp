@@ -7,25 +7,26 @@ Server::Server(int port, char* prov, char* alg)
 {
     this->port = port;
     this->F = CtxFactory(prov, alg);
-    server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_fd == 0) {
+    serverFd = socket(AF_INET, SOCK_STREAM, 0);
+    if (serverFd == 0) 
+    {
         perror("socket failed");
         exit(EXIT_FAILURE);
     }
 
     struct sockaddr_in address;
     int opt = 1;
-    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+    setsockopt(serverFd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(port);
 
-    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
+    if (bind(serverFd, (struct sockaddr *)&address, sizeof(address)) < 0) {
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
 
-    if (listen(server_fd, 3) < 0) {
+    if (listen(serverFd, 3) < 0) {
         perror("listen failed");
         exit(EXIT_FAILURE);
     }
@@ -36,7 +37,7 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv) 
     std::ifstream file(filename, std::ios::binary);
     
     if (!file) {
-        std::cerr << "Could not open the file: " << filename << std::endl;
+        std::cerr << "file error: " << filename << std::endl;
         return;
     }
 
@@ -44,13 +45,11 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv) 
     char buffer[4096];
     char buffer2[4096];
     
-    // Читаем файл и отправляем его клиенту
     while (file.read(buffer, sizeof(buffer))) {
         c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount());
         send(client_socket, buffer2, file.gcount(), 0);
     }
     
-    // Отправляем оставшиеся данные
     if (file.gcount() > 0) {
         int tmp = c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount()); 
         c.final_encrypt((unsigned char*)buffer2 + tmp);
@@ -60,22 +59,27 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv) 
     file.close();
 }
 
+
 void Server::start(unsigned char* key, unsigned char* iv) {
-    std::cout << "Server is listening on port " << port << std::endl;
+    std::cout << "Сервер слушает порт: " << port << std::endl;
 
     while (true) {
         struct sockaddr_in address;
         socklen_t addrlen = sizeof(address);
-        int client_socket = accept(server_fd, (struct sockaddr *)&address, &addrlen);
+        int client_socket = accept(serverFd, (struct sockaddr *)&address, &addrlen);
         
         if (client_socket < 0) {
             perror("accept failed");
             continue;
         }
 
-        std::cout << "Client connected" << std::endl;
+        std::cout << "Подключился новый клиент" << std::endl;
+        auto begin = std::chrono::steady_clock::now();
         sendFile(client_socket, key, iv);
+        auto end = std::chrono::steady_clock::now();
+        auto time = std::chrono::duration_cast<duration_t>(end - begin);
+        std::cout << "Скорость работы: " << 1 / time.count() << "ГБ/с" << std::endl;
         close(client_socket);
-        std::cout << "File sent and client disconnected" << std::endl;
+        std::cout << "Файл отправлен" << std::endl;
     }
 }

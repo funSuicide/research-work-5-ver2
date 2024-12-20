@@ -10,7 +10,7 @@ Client::Client(const std::string& ip_address, int port, char* prov, char* alg)
     this->F = CtxFactory(prov, alg);
     sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
-        perror("Socket creation error");
+        perror("socket error");
         exit(EXIT_FAILURE);
     }
 }
@@ -22,12 +22,12 @@ void Client::connectAndReceive(unsigned char* key, unsigned char* iv) {
     serv_addr.sin_port = htons(port);
 
     if (inet_pton(AF_INET, ip_address.c_str(), &serv_addr.sin_addr) <= 0) {
-        perror("Invalid address / Address not supported");
+        perror("address error");
         exit(EXIT_FAILURE);
     }
 
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-        perror("Connection failed");
+        perror("connection error");
         exit(EXIT_FAILURE);
     }
 
@@ -56,7 +56,7 @@ void Client::connectAndReceive(unsigned char* key, unsigned char* iv) {
     if (bytes_received < 0) {
         perror("recv failed");
     } else {
-        std::cout << "File received successfully." << std::endl;
+        std::cout << "Файл успешно получен." << std::endl;
     }
 
     file.close();
