@@ -1,5 +1,7 @@
 #include "Server.hpp"
 #include <chrono>
+#include <vector>
+#include <string>
 
 using duration_t = std::chrono::duration<float>;
 
@@ -61,7 +63,19 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, 
 
 void Server::start(unsigned char* key, unsigned char* iv, const char* filename) {
     std::cout << "Сервер слушает порт: " << port << std::endl;
+    std::vector<std::string> files(10);
+    files.push_back("test1");
+    files.push_back("test2");
+    files.push_back("test3");
+    files.push_back("test4");
+    files.push_back("test5");
+    files.push_back("test6");
+    files.push_back("test7");
+    files.push_back("test8");
+    files.push_back("test9");
+    files.push_back("test10");
 
+    int i = 0;
     while (true) {
         struct sockaddr_in address;
         socklen_t addrlen = sizeof(address);
@@ -71,15 +85,17 @@ void Server::start(unsigned char* key, unsigned char* iv, const char* filename) 
             perror("accept failed");
             continue;
         }
+        
 
         std::cout << "Подключился новый клиент" << std::endl;
         auto begin = std::chrono::steady_clock::now();
-        sendFile(client_socket, key, iv, filename);
+        sendFile(client_socket, key, iv, files[i].c_str());
         auto end = std::chrono::steady_clock::now();
         auto time = std::chrono::duration_cast<duration_t>(end - begin);
         std::cout << "Время работы: " << time.count() << std::endl;
         std::cout << "Скорость работы: " << 1 / time.count() << "ГБ/с" << std::endl;
         close(client_socket);
         std::cout << "Файл отправлен" << std::endl;
+        i++;
     }
 }
