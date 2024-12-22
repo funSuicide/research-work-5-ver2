@@ -77,7 +77,10 @@ void Server::start(unsigned char* key, unsigned char* iv) {
     while (true) {
         struct sockaddr_in address;
         socklen_t addrlen = sizeof(address);
-        int client_socket = accept(serverFd, (struct sockaddr *)&address, &addrlen);
+        
+        for (size_t i = 0; i < 10; ++i)
+        {
+            int client_socket = accept(serverFd, (struct sockaddr *)&address, &addrlen);
         
         if (client_socket < 0) {
             perror("accept failed");
@@ -85,9 +88,8 @@ void Server::start(unsigned char* key, unsigned char* iv) {
         }
 
         std::cout << "Подключился новый клиент" << std::endl;
-        for (size_t i = 0; i < 10; ++i)
-        {
             sendFile(client_socket, key, iv, files[i].c_str());
+            close(client_socket);
         }
         
         //auto begin = std::chrono::steady_clock::now();
@@ -96,7 +98,7 @@ void Server::start(unsigned char* key, unsigned char* iv) {
         //auto time = std::chrono::duration_cast<duration_t>(end - begin);
         //std::cout << "Время работы: " << time.count() << std::endl;
         //std::cout << "Скорость работы: " << 1 / time.count() << "ГБ/с" << std::endl;
-        close(client_socket);
+        
         std::cout << "Файл отправлен" << std::endl;
     }
 }
