@@ -33,7 +33,7 @@ float Client::connectAndReceive(unsigned char* key, unsigned char* iv, const cha
         exit(EXIT_FAILURE);
     }
 
-    const char *filename = "received_file";
+    //const char *filename = "received_file";
     std::ofstream file(filename, std::ios::binary);
 
     OsslCtx c = F.next(key, iv);
