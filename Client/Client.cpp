@@ -1,6 +1,5 @@
 #include "Client.hpp"
 #include <chrono>
-#include <vector>
 
 using duration_t = std::chrono::duration<float>;
 
@@ -17,7 +16,6 @@ Client::Client(const std::string& ip_address, int port, char* prov, char* alg)
 }
 
 float Client::connectAndReceive(unsigned char* key, unsigned char* iv, const char* filename) {
-    
     struct sockaddr_in serv_addr;
     
     serv_addr.sin_family = AF_INET;
@@ -64,6 +62,6 @@ float Client::connectAndReceive(unsigned char* key, unsigned char* iv, const cha
     file.close();
 
     auto time = std::chrono::duration_cast<duration_t>(end - begin);
+    std::cout << "Время работы: " << time.count() << std::endl;
     std::cout << "Скорость работы: " << 1 / time.count() << "ГБ/с" << std::endl;
-    return time.count();
 }
