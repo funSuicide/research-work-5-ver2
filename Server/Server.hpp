@@ -11,10 +11,10 @@ class Server {
 private:
     int serverFd;
     int port;
-    void sendFile(int client_socket, unsigned char* key, unsigned char* iv);
+    void sendFile(int client_socket, unsigned char* key, unsigned char* iv, const char* filename);
     CtxFactory F;
 public:
     Server(int port, char* prov, char* alg);
-    void start(unsigned char* key, unsigned char* iv);
+    void start(unsigned char* key, unsigned char* iv, const char* filename);
 };
 

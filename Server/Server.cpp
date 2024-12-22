@@ -32,8 +32,7 @@ Server::Server(int port, char* prov, char* alg)
     }
 }
 
-void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv) {
-    const char *filename = "file_to_send";
+void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, const char* filename) {
     std::ifstream file(filename, std::ios::binary);
     
     if (!file) {
@@ -60,7 +59,7 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv) 
 }
 
 
-void Server::start(unsigned char* key, unsigned char* iv) {
+void Server::start(unsigned char* key, unsigned char* iv, const char* filename) {
     std::cout << "Сервер слушает порт: " << port << std::endl;
 
     while (true) {
@@ -75,9 +74,10 @@ void Server::start(unsigned char* key, unsigned char* iv) {
 
         std::cout << "Подключился новый клиент" << std::endl;
         auto begin = std::chrono::steady_clock::now();
-        sendFile(client_socket, key, iv);
+        sendFile(client_socket, key, iv, filename);
         auto end = std::chrono::steady_clock::now();
         auto time = std::chrono::duration_cast<duration_t>(end - begin);
+        std::cout << "Время работы: " << time.count() << std::endl;
         std::cout << "Скорость работы: " << 1 / time.count() << "ГБ/с" << std::endl;
         close(client_socket);
         std::cout << "Файл отправлен" << std::endl;
