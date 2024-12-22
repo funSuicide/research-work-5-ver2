@@ -47,13 +47,13 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, 
     char buffer2[4096];
     
     while (file.read(buffer, sizeof(buffer))) {
-        c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount());
+        //c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount());
         send(client_socket, buffer, file.gcount(), 0);
     }
     
     if (file.gcount() > 0) {
         int tmp = c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount()); 
-        c.final_encrypt((unsigned char*)buffer2 + tmp);
+        //c.final_encrypt((unsigned char*)buffer2 + tmp);
         send(client_socket, buffer, file.gcount(), 0);
     }
 
