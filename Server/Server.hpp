@@ -15,6 +15,6 @@ private:
     CtxFactory F;
 public:
     Server(int port, char* prov, char* alg);
-    void start(unsigned char* key, unsigned char* iv, const char* filename);
+    void start(unsigned char* key, unsigned char* iv);
 };
 
