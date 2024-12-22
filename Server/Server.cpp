@@ -1,5 +1,7 @@
 #include "Server.hpp"
 #include <chrono>
+#include <vector>
+#include <numeric>
 
 using duration_t = std::chrono::duration<float>;
 
@@ -45,13 +47,13 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, 
     char buffer2[4096];
     
     while (file.read(buffer, sizeof(buffer))) {
-        //c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount());
+        c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount());
         send(client_socket, buffer, file.gcount(), 0);
     }
     
     if (file.gcount() > 0) {
-        //int tmp = c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount()); 
-        //c.final_encrypt((unsigned char*)buffer2 + tmp);
+        int tmp = c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount()); 
+        c.final_encrypt((unsigned char*)buffer2 + tmp);
         send(client_socket, buffer, file.gcount(), 0);
     }
 
@@ -60,9 +62,17 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, 
 
 
 void Server::start(unsigned char* key, unsigned char* iv, const char* filename) {
+    std::vector<char *> files = {"test1", "test2","test3","test4","test5","test6","test7","test8", "test9", "test10"};
+    std::vector<float> times(10);
     std::cout << "Сервер слушает порт: " << port << std::endl;
-
+    int i = 0;
     while (true) {
+        if (i > 9)
+        {
+            float sum = std::accumulate(times.begin(), times.end(), 0.0f);
+            std::cout << "RESULT: " << 56320 / sum / 1024 / 1024 << std::endl;
+            return ;
+        }
         struct sockaddr_in address;
         socklen_t addrlen = sizeof(address);
         int client_socket = accept(serverFd, (struct sockaddr *)&address, &addrlen);
@@ -74,12 +84,16 @@ void Server::start(unsigned char* key, unsigned char* iv, const char* filename) 
 
         std::cout << "Подключился новый клиент" << std::endl;
         auto begin = std::chrono::steady_clock::now();
-        sendFile(client_socket, key, iv, filename);
+        sendFile(client_socket, key, iv, files[i]);
         auto end = std::chrono::steady_clock::now();
         auto time = std::chrono::duration_cast<duration_t>(end - begin);
+        times.push_back(time.count());
         std::cout << "Время работы: " << time.count() << std::endl;
         std::cout << "Скорость работы: " << 1 / time.count() << "ГБ/с" << std::endl;
         close(client_socket);
         std::cout << "Файл отправлен" << std::endl;
+        i++;
     }
+
+    
 }
