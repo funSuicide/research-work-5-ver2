@@ -61,7 +61,7 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, 
 }
 
 
-void Server::start(unsigned char* key, unsigned char* iv, std::string& filename) {
+void Server::start(unsigned char* key, unsigned char* iv, const char* filename) {
     std::cout << "Сервер слушает порт: " << port << std::endl;
     std::vector<std::string> files(10);
     files.push_back("test1");
