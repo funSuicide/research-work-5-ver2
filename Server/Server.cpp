@@ -1,7 +1,5 @@
 #include "Server.hpp"
 #include <chrono>
-#include <vector>
-#include <string>
 
 using duration_t = std::chrono::duration<float>;
 
@@ -34,7 +32,7 @@ Server::Server(int port, char* prov, char* alg)
     }
 }
 
-void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, std::string& filename) {
+void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, const char* filename) {
     std::ifstream file(filename, std::ios::binary);
     
     if (!file) {
@@ -47,14 +45,14 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, 
     char buffer2[4096];
     
     while (file.read(buffer, sizeof(buffer))) {
-        c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount());
-        send(client_socket, buffer2, file.gcount(), 0);
+        //c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount());
+        send(client_socket, buffer, file.gcount(), 0);
     }
     
     if (file.gcount() > 0) {
-        int tmp = c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount()); 
-        c.final_encrypt((unsigned char*)buffer2 + tmp);
-        send(client_socket, buffer2, file.gcount(), 0);
+        //int tmp = c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, file.gcount()); 
+        //c.final_encrypt((unsigned char*)buffer2 + tmp);
+        send(client_socket, buffer, file.gcount(), 0);
     }
 
     file.close();
@@ -63,19 +61,7 @@ void Server::sendFile(int client_socket, unsigned char* key, unsigned char* iv, 
 
 void Server::start(unsigned char* key, unsigned char* iv, const char* filename) {
     std::cout << "Сервер слушает порт: " << port << std::endl;
-    std::vector<std::string> files(10);
-    files.push_back("test1");
-    files.push_back("test2");
-    files.push_back("test3");
-    files.push_back("test4");
-    files.push_back("test5");
-    files.push_back("test6");
-    files.push_back("test7");
-    files.push_back("test8");
-    files.push_back("test9");
-    files.push_back("test10");
 
-    int i = 0;
     while (true) {
         struct sockaddr_in address;
         socklen_t addrlen = sizeof(address);
@@ -85,17 +71,15 @@ void Server::start(unsigned char* key, unsigned char* iv, const char* filename) 
             perror("accept failed");
             continue;
         }
-        
 
         std::cout << "Подключился новый клиент" << std::endl;
         auto begin = std::chrono::steady_clock::now();
-        sendFile(client_socket, key, iv, files[i]);
+        sendFile(client_socket, key, iv, filename);
         auto end = std::chrono::steady_clock::now();
         auto time = std::chrono::duration_cast<duration_t>(end - begin);
         std::cout << "Время работы: " << time.count() << std::endl;
         std::cout << "Скорость работы: " << 1 / time.count() << "ГБ/с" << std::endl;
         close(client_socket);
         std::cout << "Файл отправлен" << std::endl;
-        i++;
     }
 }

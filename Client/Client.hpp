@@ -10,7 +10,7 @@
 class Client {
 public:
     Client(const std::string& ip_address, int port, char* prov, char* alg);
-    float connectAndReceive(unsigned char* key, unsigned char* iv, const char* filename);
+    float connectAndReceive(unsigned char* key, unsigned char* iv);
 private:
     int sock;
     std::string ip_address;

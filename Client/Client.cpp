@@ -15,7 +15,7 @@ Client::Client(const std::string& ip_address, int port, char* prov, char* alg)
     }
 }
 
-float Client::connectAndReceive(unsigned char* key, unsigned char* iv, const char* filename) {
+float Client::connectAndReceive(unsigned char* key, unsigned char* iv) {
     struct sockaddr_in serv_addr;
     
     serv_addr.sin_family = AF_INET;
@@ -31,7 +31,7 @@ float Client::connectAndReceive(unsigned char* key, unsigned char* iv, const cha
         exit(EXIT_FAILURE);
     }
 
-    //const char *filename = "received_file";
+    const char *filename = "received_file";
     std::ofstream file(filename, std::ios::binary);
 
     OsslCtx c = F.next(key, iv);
@@ -43,12 +43,13 @@ float Client::connectAndReceive(unsigned char* key, unsigned char* iv, const cha
 		
 		
     while ((bytes_received = recv(sock, buffer, sizeof(buffer), 0)) > 0) {
+        /*
         int tmp = c.encrypt((unsigned char*)buffer, (unsigned char*)buffer2, bytes_received);
         if (bytes_received < sizeof(buffer))
         {
             c.final_encrypt((unsigned char*)buffer2 + tmp);
-        }
-        file.write(buffer2, bytes_received);
+        }*/
+        file.write(buffer, bytes_received);
     }
 
     auto end = std::chrono::steady_clock::now();
