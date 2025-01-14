@@ -32,6 +32,7 @@ void testSpeed(char* prov, char* alg)
     uint8_t iv[8] = "bbbbeee";
 
 	for (int j = 0; j < 5; ++j) {
+        std::cout << "Шаг " << j << std::endl;
         std::vector<unsigned char> byteArray(GIGABYTE);
         CtxFactory F = CtxFactory(prov, alg);
         OsslCtx c = F.next(key, iv);
@@ -60,7 +61,9 @@ void testSpeed(char* prov, char* alg)
 }
 
 int main()
-{
+{       
+        
+        /*
 		std::cout << "Тестирование алгоритма Магма AVX-2" << std::endl;
     	testSpeed("gost", "magmaAVX2");
     	std::cout << "Тестирование алгоритма Кузнечик AVX-2" << std::endl;
@@ -78,4 +81,8 @@ int main()
     	testSpeed("testgost", "magma-ctr");
         std::cout << "Тестирование алгоритма Кузнечик (сторонний провайдер)" << std::endl;
     	testSpeed("testgost", "kuznyechik-ctr");
+        */
+
+        std::cout << "Тестирование алгоритма AES (Legacy)" << std::endl;
+        testSpeed("legacy", "AES-256-CTR");
 }
